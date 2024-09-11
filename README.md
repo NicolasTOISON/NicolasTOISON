@@ -1,4 +1,4 @@
-## (🇫🇷) Salut 👋
+## (🇫🇷) Salut 👋 Je m'appelle Nicolas et je suis ingénieur logiciel et entrepreneur français
 
 - 🏢 J'ai fondé [Le Studio Web Crafters](https://web-crafters.studio) en 2024
 - 📍 Je suis basé à Saint-Malo 🌊, Bretagne, France
