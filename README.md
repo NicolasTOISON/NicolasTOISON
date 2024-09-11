@@ -22,14 +22,14 @@
 
 ## (🇫🇷)Apprenons ensemble // (🇺🇸) Learn with me
 
-[HTML](./software-development-awesome/html/)
+[HTML](./software-development-awesome/html/index.md)
 
-[CSS](./software-development-awesome/css/)
+[CSS](./software-development-awesome/css/index.md)
 
-[JS](./software-development-awesome/js/)
+[JS](./software-development-awesome/js/index.md/)
 
 ## (🇫🇷) Notes des conférences auxquelles j'ai assistés // (🇺🇸) Conferences notes I assisted
 
-[2022](./conferences/2022/)
+[2022](./conferences/2022/index.md)
 
-[2024](./conferences/2024/)
+[2024](./conferences/2024/index.md)
