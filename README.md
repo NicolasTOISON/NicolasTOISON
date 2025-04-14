@@ -18,6 +18,12 @@
 
 ## Certifications
 
+### Cloud computing
+
+<img src="https://images.credly.com/size/340x340/images/b9feab85-1a43-4f6c-99a5-631b88d5461b/image.png" width="150" height="150">
+
+### Agile Framework
+
 <img src="https://static.scrum.org/web/badges/badge-09173b39-cedf-4321-88b6-ce0acdfb5a70.svg" width="150" height="150">
 
 ## (🇫🇷)Apprenons ensemble // (🇺🇸) Learn with me
