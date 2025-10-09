@@ -1,18 +1,18 @@
 ## (🇫🇷) Salut 👋 Je m'appelle Nicolas et je suis ingénieur logiciel et entrepreneur français
 
-- 🏢 J'ai fondé [Le Studio Web Crafters](https://web-crafters.studio) en 2024
+- 🏢 J'ai fondé [Web Crafters](https://web-crafters.studio) en 2024, un collectif de freelance.
 - 📍 Je suis basé à Saint-Malo 🌊, Bretagne, France
-- 🔭 Je travaille actuellement en tant que développeur de logiciels Front-End
-- 🌱 J'apprends actuellement Kubernetes
+- 🔭 Je travaille actuellement en tant que SRE
+- 🌱 J'apprends actuellement à utiliser N8N
 - 📫 Comment me contacter : [E-mail](mailto:hello@nicolastoison.com) // [X (ex-Twitter)](https://twitter.com/nicolas_toison) // [LinkedIn](https://www.linkedin.com/in/nicolastoison/)
 - 🌐 [Mon site perso](https://nicolastoison.com)
 
 ## (🇺🇸) Hi there 👋 I'm Nicolas a french software engineer and entrepreneur
 
-- 🏢 I founded [Web Crafters Studio](https://web-crafters.studio) in 2024
+- 🏢 I founded [Web Crafters](https://web-crafters.studio) in 2024, a freelance collective
 - 📍 I'm based at Saint-Malo 🌊, Bretagne, France
-- 🔭 I’m currently working as a Front-End software developer
-- 🌱 I’m currently learning Kubernetes
+- 🔭 I’m currently working as a SRE
+- 🌱 I’m currently learning to use N8N
 - 📫 How to reach me: [E-mail](mailto:hello@nicolastoison.com) // [X (ex-Twitter)](https://twitter.com/nicolas_toison) // [LinkedIn](https://www.linkedin.com/in/nicolastoison/)
 - 🌐 [My personal website](https://nicolastoison.com)
 
@@ -39,3 +39,5 @@
 [2022](./conferences/2022/index.md)
 
 [2024](./conferences/2024/index.md)
+
+[2025](./conferences/2025/index.md)
