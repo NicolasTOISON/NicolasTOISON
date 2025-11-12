@@ -1,0 +1,482 @@
+---
+globs:
+  - "**/*"
+  - "!src/components/**/*.astro"  # Délégué à ui.mdc
+  - "!src/lib/services/**/*.ts"   # Délégué à logic.mdc
+  - "!src/lib/adapters/**/*.ts"   # Délégué à data.mdc
+alwaysApply: true
+title: AstroJS Boilerplate - Règles générales
+description: Règles principales incluant TypeScript strict, conventions de nommage, gestion d'erreurs, performance, accessibilité, sécurité et orchestration vers les règles spécialisées (UI, Logic, Data, Testing)
+version: 1.0.0
+tags: [astro, typescript, boilerplate, atomic-design]
+---
+
+# Vue d'ensemble du projet
+
+Ce projet utilise **AstroJS** avec **TypeScript** et suit les principes de l'**Atomic Design**.
+
+Les règles sont organisées de manière modulaire :
+- **UI** : Composants Astro (Atomic Design)
+- **Logic** : Services, utilitaires et logique métier  
+- **Data** : Adapters API, Content Collections, validation
+- **Testing** : Tests unitaires et d'intégration
+
+# Stack technique
+
+::stack-info
+- **Framework** : AstroJS
+- **Langage** : TypeScript (mode strict)
+- **JavaScript** : ES2024+ (dernières fonctionnalités ECMAScript)
+- **Styling** : CSS standard (pas de framework CSS)
+- **Validation** : Zod
+- **Tests** : Vitest / Playwright
+- **APIs** : REST avec adapters
+- **Gestion d'état** : Nanostores (si nécessaire)
+::
+
+# Structure des dossiers
+
+```
+src/
+├── components/          # Composants Astro (Atomic Design)
+│   ├── atoms/          # Composants de base (Button, Input, Icon...)
+│   ├── molecules/      # Groupes d'atoms (SearchBar, Card...)
+│   ├── organisms/      # Sections complexes (Header, Footer...)
+│   └── templates/      # Structures de pages
+├── layouts/            # Layouts Astro
+├── pages/              # Routes Astro
+├── content/            # Content Collections
+│   └── config.ts       # Schémas des collections
+├── lib/                # Logique métier
+│   ├── services/       # Services métier
+│   ├── utils/          # Fonctions utilitaires
+│   └── adapters/       # Adapters API/données
+├── types/              # Définitions TypeScript
+├── env.d.ts            # Types d'environnement
+└── tests/              # Tests (miroir de src/)
+```
+
+# Variables d'environnement
+
+::env-config
+**Organisation par environnement :**
+- `.env.development` - Développement local
+- `.env.staging` - Environnement de staging
+- `.env.production` - Production
+
+**Convention de nommage :**
+```typescript
+PUBLIC_API_URL=          // Variables publiques (accessible côté client)
+API_KEY=                 // Variables privées (serveur uniquement)
+DATABASE_URL=
+```
+::
+
+# Règles TypeScript
+
+::typescript-rules{priority="high"}
+
+## Mode strict obligatoire
+
+Le fichier `tsconfig.json` doit avoir `"strict": true`
+
+## Typage explicite
+
+Toujours typer les paramètres de fonctions et les valeurs de retour :
+
+```typescript
+// ✅ Bon
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+function getUser(id: string): Promise<User> {
+  // ...
+}
+
+// ❌ Mauvais
+function getUser(id) {
+  // ...
+}
+```
+
+## Éviter `any`
+
+Préférer `unknown` si le type est vraiment inconnu :
+
+```typescript
+// ✅ Bon
+function processData(data: unknown): string {
+  if (typeof data === 'string') {
+    return data.toUpperCase();
+  }
+  return String(data);
+}
+
+// ❌ Mauvais
+function processData(data: any): string {
+  return data.toUpperCase();
+}
+```
+
+## Interfaces vs Types
+
+- **Interfaces** pour les objets de données
+- **Types** pour les unions, intersections et utilitaires
+
+```typescript
+// Pour les objets
+interface User {
+  id: string;
+  name: string;
+}
+
+// Pour les unions/intersections
+type Status = 'pending' | 'success' | 'error';
+type UserWithStatus = User & { status: Status };
+```
+
+::
+
+# JavaScript moderne (ES2024+)
+
+::javascript-features
+
+Utilisez les fonctionnalités modernes :
+
+- **Optional chaining** : `user?.profile?.avatar`
+- **Nullish coalescing** : `value ?? defaultValue`
+- **Array methods** : `.at()`, `.findLast()`, `.toSorted()`
+- **Top-level await** dans les modules
+- **Private class fields** : `#privateField`
+
+```typescript
+// ✅ Utiliser les fonctionnalités modernes
+const lastItem = array.at(-1);
+const sorted = items.toSorted((a, b) => a.id - b.id);
+const name = user?.profile?.name ?? 'Anonymous';
+
+// ❌ Éviter les anciennes syntaxes
+const lastItem = array[array.length - 1];
+const sorted = [...items].sort((a, b) => a.id - b.id);
+const name = user && user.profile && user.profile.name || 'Anonymous';
+```
+
+::
+
+# Conventions de nommage
+
+::naming-conventions{strict="true"}
+
+| Élément | Convention | Exemple |
+|---------|-----------|---------|
+| Fichiers | kebab-case | `user-profile.astro`, `api-adapter.ts` |
+| Composants | PascalCase (code) | `<UserProfile />` |
+| Variables/Fonctions | camelCase | `getUserData`, `isLoading` |
+| Constantes | SCREAMING_SNAKE_CASE | `API_BASE_URL` |
+| Types/Interfaces | PascalCase | `User`, `ApiResponse` |
+| Dossiers | kebab-case | `user-profile/` |
+
+::
+
+# Organisation des imports
+
+::import-order
+
+Ordre des imports :
+
+1. **Dépendances externes** (Astro, React...)
+2. **Alias de chemin** (`@/...`)
+3. **Imports relatifs**
+4. **Types** (avec `type` keyword)
+
+```typescript
+// ✅ Bon ordre
+import { getCollection } from 'astro:content';
+import { validateSchema } from '@/lib/utils/validation';
+import { formatDate } from './date-utils';
+import type { User } from '@/types/user';
+
+// ❌ Mauvais ordre
+import type { User } from '@/types/user';
+import { formatDate } from './date-utils';
+import { getCollection } from 'astro:content';
+```
+
+::
+
+# Gestion des erreurs
+
+::error-handling{priority="critical"}
+
+## Principes
+
+1. **Toujours typer les erreurs**
+2. **Utiliser des classes d'erreur personnalisées**
+3. **Logger les erreurs de manière appropriée**
+4. **Ne jamais exposer les détails sensibles côté client**
+
+## Exemple de classe d'erreur
+
+```typescript
+class ApiError extends Error {
+  constructor(
+    message: string,
+    public statusCode: number,
+    public code: string
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
+// Utilisation
+try {
+  const data = await fetchApi('/users');
+} catch (error) {
+  if (error instanceof ApiError) {
+    console.error(`API Error ${error.code}:`, error.message);
+  } else {
+    console.error('Unexpected error:', error);
+  }
+  throw error;
+}
+```
+
+::
+
+# Documentation du code
+
+::documentation-rules
+
+## Commentaires JSDoc
+
+Utiliser JSDoc pour les fonctions publiques et exports :
+
+```typescript
+/**
+ * Récupère les données utilisateur depuis l'API
+ * @param userId - Identifiant unique de l'utilisateur
+ * @returns Promesse contenant les données utilisateur
+ * @throws {ApiError} Si l'utilisateur n'existe pas
+ */
+async function fetchUser(userId: string): Promise<User> {
+  // TODO(2025-10-28): Ajouter mise en cache Redis
+  // ...
+}
+```
+
+## Commentaires inline
+
+Uniquement pour la logique complexe, pas pour le code évident.
+
+## TODO/FIXME
+
+Toujours avec contexte et date :
+
+```typescript
+// TODO(2025-10-28): Optimiser avec un index sur user_id
+// FIXME(2025-10-28): Gérer le cas où l'API retourne null
+```
+
+::
+
+# Performance
+
+::performance-guidelines
+
+1. **Images** : Utiliser le composant `<Image>` d'Astro avec optimisation
+2. **Lazy loading** : Charger les composants lourds à la demande
+3. **CSS critique** : Inline le CSS critique dans `<head>`
+4. **Prefetch** : Utiliser `prefetch` pour les liens importants
+5. **Bundle splitting** : Séparer le code par routes
+
+```astro
+---
+// Lazy loading d'un composant lourd
+import { Image } from 'astro:assets';
+const HeavyChart = () => import('@/components/organisms/heavy-chart.astro');
+---
+
+<Image 
+  src={heroImage} 
+  alt="Hero image"
+  loading="eager"
+  width={1200}
+  height={600}
+/>
+
+<a href="/about" data-astro-prefetch>À propos</a>
+```
+
+::
+
+# Accessibilité
+
+::accessibility{priority="high"}
+
+1. **Sémantique HTML** : Utiliser les bonnes balises (`<nav>`, `<main>`, `<article>`)
+2. **ARIA** : Ajouter les attributs ARIA quand nécessaire
+3. **Contraste** : Respecter WCAG 2.1 niveau AA minimum
+4. **Navigation clavier** : Tous les éléments interactifs accessibles au clavier
+5. **Alt text** : Descriptions significatives pour les images
+
+```astro
+<!-- ✅ Bon -->
+<nav aria-label="Navigation principale">
+  <ul>
+    <li><a href="/">Accueil</a></li>
+  </ul>
+</nav>
+
+<button 
+  aria-label="Ouvrir le menu"
+  aria-expanded="false"
+>
+  ☰
+</button>
+
+<!-- ❌ Mauvais -->
+<div class="nav">
+  <div onclick="navigate()">Accueil</div>
+</div>
+```
+
+::
+
+# Sécurité
+
+::security-rules{priority="critical"}
+
+1. **Jamais de secrets dans le code** : Utiliser les variables d'environnement
+2. **Validation côté serveur** : Toujours valider avec Zod
+3. **Sanitization** : Échapper le contenu utilisateur
+4. **HTTPS uniquement** en production
+5. **CSP** : Configurer Content Security Policy
+
+```typescript
+// ❌ JAMAIS faire ça
+const API_KEY = "sk-1234567890abcdef";
+
+// ✅ Toujours utiliser les variables d'environnement
+const API_KEY = import.meta.env.API_KEY;
+
+// ✅ Toujours valider côté serveur
+import { z } from 'zod';
+
+const UserSchema = z.object({
+  email: z.string().email(),
+  age: z.number().min(18),
+});
+
+const validatedData = UserSchema.parse(formData);
+```
+
+::
+
+# Règles spécialisées
+
+::specialized-rules
+
+Selon le contexte de votre travail, référez-vous aux règles spécifiques :
+
+## 🎨 Création de composants UI
+
+**Quand :** Créer/modifier des fichiers `.astro` dans `src/components/`
+
+**Règle :** `.cursorrules/ui.mdc`
+
+**Concepts :** Atomic Design, CSS standard, accessibilité, props TypeScript
+
+## 🧠 Logique métier
+
+**Quand :** Créer/modifier des services, utilitaires ou logique partagée
+
+**Règle :** `.cursorrules/logic.mdc`
+
+**Concepts :** Services, utils, validation Zod, gestion d'erreurs
+
+## 📊 Gestion des données
+
+**Quand :** Travailler avec les APIs, Content Collections ou adapters
+
+**Règle :** `.cursorrules/data.mdc`
+
+**Concepts :** Adapters REST, Content Collections, schémas Zod, caching
+
+## 🧪 Tests
+
+**Quand :** Écrire ou maintenir des tests
+
+**Règle :** `.cursorrules/testing.mdc`
+
+**Concepts :** Vitest, tests unitaires, tests d'intégration, mocks
+
+::
+
+# Commandes utiles
+
+::commands
+
+```bash
+# Développement
+npm run dev                    # Lancer le serveur de dev
+npm run build                  # Build de production
+npm run preview                # Preview du build
+
+# Qualité de code
+npm run lint                   # Linter (ESLint)
+npm run format                 # Formatter (Prettier)
+npm run type-check             # Vérification TypeScript
+
+# Tests
+npm run test                   # Tests unitaires
+npm run test:watch             # Tests en mode watch
+npm run test:e2e               # Tests end-to-end
+npm run test:coverage          # Coverage des tests
+```
+
+::
+
+# Workflow de développement
+
+::workflow
+
+1. **Créer une branche** depuis `main` : `feature/nom-feature`
+2. **Développer** en suivant les règles appropriées
+3. **Tester** : unitaires + intégration + e2e
+4. **Linter/Format** : `npm run lint && npm run format`
+5. **Type-check** : `npm run type-check`
+6. **Commit** : Messages conventionnels (feat:, fix:, docs:, etc.)
+7. **Pull Request** : Review + CI/CD checks
+
+::
+
+# Priorités et compromis
+
+::priorities{strict="true"}
+
+**En cas de conflit entre :**
+
+1. **Sécurité** > Performance > Developer Experience
+2. **Accessibilité** > Esthétique
+3. **Maintenabilité** > Concision du code
+4. **Standards web** > Frameworks propriétaires
+5. **TypeScript strict** > Flexibilité
+
+::
+
+# Ressources
+
+::resources
+
+- [Documentation AstroJS](https://docs.astro.build)
+- [Atomic Design](https://bradfrost.com/blog/post/atomic-web-design/)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
+- [Zod Documentation](https://zod.dev)
+- [Web.dev Performance](https://web.dev/performance/)
+- [WCAG Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
+
+::
